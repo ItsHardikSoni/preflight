@@ -87,3 +87,11 @@ Preflight catches common, high-impact mistakes with fast pattern checks. A clean
 ## License
 
 [MIT](LICENSE). Free for any use.
+
+## Contributors
+
+Thanks to everyone who has made Preflight better! 💛
+
+<a href="https://github.com/erdellll/preflight/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=erdellll/preflight" alt="Preflight contributors" />
+</a>
