@@ -25,6 +25,8 @@ Then add a row to [docs/rules.md](docs/rules.md), update the check count in the 
 
 Look for issues labelled [`good first issue`](https://github.com/erdellll/preflight/issues?q=is%3Aopen+label%3A%22good+first+issue%22). Each one names the check id, what it should flag, a good and a bad example, and when it's done. Comment that you're taking it so nobody duplicates your work.
 
+Run `npm run demo` to see a full report on the broken demo app.
+
 ## Reporting a false positive
 
 Open a "False positive" issue with the smallest snippet that triggers it. Those get fixed first.

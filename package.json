@@ -9,7 +9,8 @@
   },
   "files": ["bin", "src", "examples", ".claude-plugin", "commands"],
   "scripts": {
-    "test": "node --test"
+  "test": "node --test",
+  "demo": "node bin/preflight.js --demo --fail-on never"
   },
   "engines": {
     "node": ">=20"
