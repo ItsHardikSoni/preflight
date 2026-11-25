@@ -7,14 +7,39 @@
     "vibe-preflight": "bin/preflight.js",
     "preflight": "bin/preflight.js"
   },
-  "files": ["bin", "src", "examples", ".claude-plugin", "commands"],
+  "files": [
+    "bin",
+    "src",
+    "examples",
+    ".claude-plugin",
+    "commands"
+  ],
   "scripts": {
     "test": "node --test"
   },
   "engines": {
     "node": ">=20"
   },
-  "keywords": ["vibe-coding", "launch", "checklist", "security", "supabase", "stripe", "cli", "claude-code"],
+  "keywords": [
+    "vibe-coding",
+    "launch",
+    "checklist",
+    "security",
+    "supabase",
+    "stripe",
+    "cli",
+    "claude-code",
+    "nextjs",
+    "vite",
+    "expo",
+    "react-native",
+    "firebase",
+    "lovable",
+    "bolt",
+    "cursor",
+    "secrets",
+    "pre-launch"
+  ],
   "author": "erdellll",
   "license": "MIT",
   "repository": {
