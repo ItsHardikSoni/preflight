@@ -1,0 +1,31 @@
+name: Feature idea
+description: Suggest a feature or improvement for Preflight
+title: "Idea: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What would you like Preflight to do?
+      description: Describe the feature or improvement you have in mind.
+      placeholder: I would like Preflight to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why would it help you?
+      description: Explain the problem this feature would solve or how it would help.
+      placeholder: This would help because...
+    validations:
+      required: true
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: Anything you've tried or seen elsewhere?
+      description: Share existing tools, examples, or approaches if applicable.
+      placeholder: Optional examples or links...
+    validations:
+      required: false
