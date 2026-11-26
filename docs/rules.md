@@ -9,6 +9,12 @@ Every check lives in `src/rules/<id>.js`. Want one that isn't here? [Add it](../
 | `supabase-rls-disabled` | Security | critical | A SQL migration that creates a table without enabling row-level security |
 | `stripe-webhook-unverified` | Security | critical | A Stripe webhook handler that never verifies the signature with `constructEvent` |
 | `cors-wildcard` | Security | warning | `cors()` with no options, or `Access-Control-Allow-Origin: *` |
+| `next-public-secret` | Security | critical | A `NEXT_PUBLIC_*` variable whose name says secret (`*SECRET*`, `*SERVICE_ROLE*`, `*PRIVATE*`), so its value ships to the browser |
+| `vite-env-secret-prefix` | Security | critical | A `VITE_*`, `EXPO_PUBLIC_*` or `REACT_APP_*` name that says secret, so its value ships to the browser |
+| `jwt-secret-weak` | Security | critical | `jwt.sign` or `jwt.verify` with a hard-coded secret under 32 characters, or a placeholder such as `'secret'` |
+| `console-log-secrets` | Security | warning | A `console.log` or `print` call that prints a variable, key or `${…}` whose name says password, token, secret or api key |
+| `debug-mode-production` | Security | warning | Django `DEBUG = True`, Flask `app.run(debug=True)` or Express `app.set('env', 'development')` outside `tests/` |
+| `sql-string-concat` | Security | warning | SQL built with a template literal or `+` from a value that comes from a request, instead of a bound parameter |
 | `no-error-monitoring` | Reliability | info | A JavaScript app with no Sentry, PostHog, Bugsnag, Rollbar or LogRocket |
 | `no-privacy-policy` | Launch basics | warning | An app that signs users up or collects emails but has no privacy page |
 | `missing-meta-tags` | Launch basics | warning | An `index.html` or Next.js root layout without a title, description or share image |
@@ -29,7 +35,7 @@ Add a comment on the line, or the line above:
 app.use(cors());
 ```
 
-This works for findings that point at a line. Findings about a whole file or project (`env-file-committed`, `stripe-webhook-unverified`, `no-error-monitoring`, `no-privacy-policy`, `missing-meta-tags`, `missing-favicon`, `missing-robots-txt`) are skipped with `--ignore` instead:
+A finding about a whole file (`env-file-committed`, `stripe-webhook-unverified`, `no-error-monitoring`, `no-privacy-policy`, `missing-meta-tags`) takes the same comment in that file's first five lines. Anything without a file of its own, and anything you want gone project-wide, uses `--ignore`:
 
 ```bash
 npx vibe-preflight --ignore no-error-monitoring,no-privacy-policy

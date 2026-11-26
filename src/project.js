@@ -31,6 +31,10 @@ async function walk(root, dir, out) {
   }
   for (const entry of entries) {
     const full = path.join(dir, entry.name);
+    // readdir reports a symlink as neither a file nor a directory unless it is dereferenced, so
+    // both branches below skip one on purpose: following links can loop (a folder linked into
+    // itself) and can read outside the project, and a scan is meant to report on the tree it was
+    // given. A symlinked `.env` is therefore not checked (#24).
     if (entry.isDirectory()) {
       if (!SKIP_DIRS.has(entry.name)) await walk(root, full, out);
     } else if (entry.isFile()) {

@@ -245,3 +245,45 @@ test('cors-wildcard names corsHeaders for a Supabase edge function, and keeps th
   assert.equal(generic.length, 1);
   assert.doesNotMatch(generic[0].fix, /corsHeaders/, 'the generic advice stays generic');
 });
+
+// Every index.html counted as an entry page, so supabase/templates/ and public/docs/ were flagged;
+// and Next.js's app/opengraph-image.png convention was not recognised at all (#21).
+test('missing-meta-tags checks only entry pages, and accepts an opengraph-image file', () => {
+  const layoutWithoutOpenGraph = 'export const metadata = { title: "x", description: "y" };';
+
+  // supabase/templates/index.html is an email template, not a page a visitor lands on.
+  const template = {
+    files: ['supabase/templates/index.html'],
+    read: () => '<html><body>Confirm your email</body></html>',
+    has: () => false,
+  };
+  assert.deepEqual(meta.check(template), [], 'an email template is not an entry page');
+
+  // public/docs/index.html is generated documentation, not the site's entry page.
+  const docs = {
+    files: ['public/docs/index.html'],
+    read: () => '<html><body>Docs</body></html>',
+    has: () => false,
+  };
+  assert.deepEqual(meta.check(docs), [], 'generated docs are not the entry page');
+
+  // The root index.html is still checked.
+  const root = {
+    files: ['index.html'],
+    read: () => '<html><head><title>t</title></head></html>',
+    has: () => false,
+  };
+  const flagged = meta.check(root);
+  assert.equal(flagged.length, 1);
+  assert.match(flagged[0].message, /description/);
+});
+
+test('missing-meta-tags accepts app/opengraph-image.* as the share image', () => {
+  const layout = {
+    files: ['app/layout.tsx', 'app/opengraph-image.png'],
+    read: (f) => (f === 'app/layout.tsx' ? 'export const metadata = { title: "x", description: "y" };' : ''),
+    has: (re) => ['app/layout.tsx', 'app/opengraph-image.png'].some((f) => re.test(f)),
+  };
+  assert.equal(layout.read('app/layout.tsx'), 'export const metadata = { title: "x", description: "y" };');
+  assert.deepEqual(meta.check(layout), [], 'the opengraph-image file satisfies the share image');
+});

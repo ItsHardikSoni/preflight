@@ -1,5 +1,12 @@
-const HTML_ENTRY = /(?:^|\/)index\.html$/;
+/**
+ * Only a page a visitor can land on: the root index.html, or one directly under public/ or src/.
+ * `supabase/templates/index.html` is the body of a confirmation email and `public/docs/index.html`
+ * is generated documentation, so neither is the entry page any of this advice is about (#21).
+ */
+const HTML_ENTRY = /^(?:index\.html|(?:public|src)\/index\.html)$/;
 const LAYOUT = /^(?:src\/)?app\/layout\.(?:tsx|jsx|js|ts)$/;
+/** Next.js generates the share image from this file rather than from an `openGraph` block. */
+const OPENGRAPH_FILE = /(?:^|\/)app\/opengraph-image\.(?:png|jpe?g|gif|webp|avif|svg|tsx?|jsx?)$/;
 
 function missingInHtml(text) {
   const missing = [];
@@ -25,11 +32,16 @@ export default {
   severity: 'warning',
   check(project) {
     const findings = [];
+    // A Next.js app can satisfy the share image with a file next to the layout, which the layout's
+    // own text cannot show.
+    const hasOpengraphFile = project.files.some((f) => OPENGRAPH_FILE.test(f));
     for (const file of project.files) {
       const isHtml = HTML_ENTRY.test(file) && !file.includes('/dist/');
       const isLayout = LAYOUT.test(file);
       if (!isHtml && !isLayout) continue;
-      const missing = isHtml ? missingInHtml(project.read(file)) : missingInLayout(project.read(file));
+      const missing = isHtml
+        ? missingInHtml(project.read(file))
+        : missingInLayout(project.read(file)).filter((m) => !(m === 'openGraph image' && hasOpengraphFile));
       if (missing.length) {
         findings.push({
           file,

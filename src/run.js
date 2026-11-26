@@ -3,11 +3,17 @@ import { loadRules } from './rules/index.js';
 import { score } from './score.js';
 
 function ignoredInline(project, finding, ruleId) {
-  if (!finding.file || !finding.line) return false;
+  if (!finding.file) return false;
   const lines = project.lines(finding.file);
   const token = `preflight-ignore ${ruleId}`;
+  // A finding with no line is about the file as a whole (a committed .env, an unverified webhook),
+  // so the comment silences it from the head of the file rather than from one line (#16).
+  if (!finding.line) return lines.slice(0, FILE_LEVEL_IGNORE_LINES).some((l) => l?.includes(token));
   return [lines[finding.line - 1], lines[finding.line - 2]].some((l) => l?.includes(token));
 }
+
+/** How far into a file a `preflight-ignore` is still read for a finding that has no line. */
+const FILE_LEVEL_IGNORE_LINES = 5;
 
 /**
  * Scans a project and returns the full report.

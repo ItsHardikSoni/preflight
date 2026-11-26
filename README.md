@@ -39,7 +39,7 @@ Scans a deliberately broken demo app (every secret is fake) so you can see what 
 
 ## What it checks
 
-11 checks today, across security, reliability and launch basics. See [all checks](docs/rules.md).
+17 checks today, across security, reliability and launch basics. See [all checks](docs/rules.md).
 
 | | |
 |---|---|
@@ -59,7 +59,7 @@ npx vibe-preflight --fail-on warning   # exit code policy: critical (default) | 
 ```
 Set NO_COLOR=1 to turn off coloured output.
 
-Silence a finding that points at a line with `// preflight-ignore <check-id>` on that line or the line above. For findings about a whole file or project (for example a missing privacy page), skip the check with `--ignore <check-id>`.
+Silence a finding that points at a line with `// preflight-ignore <check-id>` on that line or the line above. A finding about a whole file (a committed `.env`, an unverified webhook) takes the same comment in the file's first five lines. Anything you want gone project-wide, including findings with no file at all, uses `--ignore <check-id>`.
 
 ## Use it in CI
 
@@ -107,6 +107,10 @@ Use `// preflight-ignore <check-id>` on the affected line or `--ignore <check-id
 **Which stacks does it understand?**
 
 Preflight can scan any project's files, but its checks work best with Next.js, Vite, Supabase, Stripe, Express and plain HTML.
+
+**Why is a symlinked file not checked?**
+
+Symbolic links are skipped on purpose, both files and folders. Following them can loop — a folder linked into itself never ends — and can read files outside the project you asked Preflight to scan. A `.env` that is a symlink to a file elsewhere is therefore not reported; copy it in, or point the check at the folder that really holds it. The comment on `walk` in `src/project.js` says the same thing next to the code.
 
 ## License
 
