@@ -19,6 +19,38 @@ test('env-file-committed is quiet when ignored, and for .env.example', async () 
   assert.deepEqual(envFile.check(await fixtureProject('env-file-committed', 'good-local')), []);
 });
 
+test('env-file-committed never flags .env.vault', async () => {
+  assert.deepEqual(
+    envFile.check(await fixtureProject('env-file-committed', 'good-vault')),
+    [],
+  );
+});
+
+test('env-file-committed still flags a private .env file', async () => {
+  const findings = envFile.check(
+    await fixtureProject('env-file-committed', 'bad-vault'),
+  );
+
+  assert.equal(findings.length, 1);
+  assert.equal(findings[0].file, '.env');
+});
+
+test('env-file-committed skips public-only production variables', async () => {
+  assert.deepEqual(
+    envFile.check(await fixtureProject('env-file-committed', 'good-public')),
+    [],
+  );
+});
+
+test('env-file-committed flags production files containing private variables', async () => {
+  const findings = envFile.check(
+    await fixtureProject('env-file-committed', 'bad-public'),
+  );
+
+  assert.equal(findings.length, 1);
+  assert.equal(findings[0].file, '.env.production');
+});
+
 test('secret-in-client flags a live key in client code', async () => {
   const f = secret.check(await fixtureProject('secret-in-client', 'bad'));
   assert.equal(f.length, 1);
