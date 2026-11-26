@@ -13,7 +13,7 @@ format.
 
 ### Added
 
-- Eight built-in checks for security, reliability,
+- Ten built-in checks for security, reliability,
   and launch readiness.
 - Terminal report cards for displaying scan results.
 - HTML report cards for viewing scan results.
