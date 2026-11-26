@@ -84,6 +84,24 @@ Every check is one small file plus two example folders, one it must flag and one
 
 Preflight catches common, high-impact mistakes with fast pattern checks. A clean report means none of its checks fired, not that your app is secure. Use it as a seatbelt, not a substitute for a review.
 
+## FAQ
+
+**Does Preflight send my code anywhere?**
+
+No. Preflight runs entirely on your local machine, makes no network calls and does not collect telemetry. Your code never leaves your computer.
+
+**Does a 100/100 score mean my app is secure?**
+
+No. It only means that none of Preflight's checks detected an issue. See the [Not a security audit](#not-a-security-audit) section for more details.
+
+**How do I silence a false positive?**
+
+Use `// preflight-ignore <check-id>` on the affected line or `--ignore <check-id>` when running Preflight. Please also open a GitHub issue labelled or titled "False positive" so the check can be improved.
+
+**Which stacks does it understand?**
+
+Preflight can scan any project's files, but its checks work best with Next.js, Vite, Supabase, Stripe, Express and plain HTML.
+
 ## License
 
 [MIT](LICENSE). Free for any use.
