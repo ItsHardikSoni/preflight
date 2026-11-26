@@ -51,7 +51,7 @@ Scans a deliberately broken demo app (every secret is fake) so you can see what 
 ```bash
 npx vibe-preflight [path]          # scan a folder (default: current folder)
 npx vibe-preflight --html          # also write a shareable preflight-report.html
-npx vibe-preflight --json          # machine-readable output
+npx vibe-preflight --json          # machine-readable output ([JSON format](docs/json.md))
 npx vibe-preflight --ignore a,b    # skip checks by id
 npx vibe-preflight --fail-on warning   # exit code policy: critical (default) | warning | never
 ```
