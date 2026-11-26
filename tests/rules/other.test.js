@@ -7,6 +7,7 @@ import privacy from '../../src/rules/no-privacy-policy.js';
 import meta from '../../src/rules/missing-meta-tags.js';
 import favicon from '../../src/rules/missing-favicon.js';
 import robots from '../../src/rules/missing-robots-txt.js';
+import notFound from '../../src/rules/missing-404-page.js';
 
 test('cors-wildcard flags cors() with no options and a * header', async () => {
   const f = cors.check(await fixtureProject('cors-wildcard', 'bad'));
@@ -16,6 +17,69 @@ test('cors-wildcard flags cors() with no options and a * header', async () => {
 
 test('cors-wildcard is quiet with an origin list', async () => {
   assert.deepEqual(cors.check(await fixtureProject('cors-wildcard', 'good')), []);
+});
+
+test('missing-404-page flags a Next.js App Router without a not-found page', async () => {
+  const f = notFound.check(await fixtureProject('missing-404-page', 'bad'));
+  assert.equal(f.length, 1);
+  assert.equal(f[0].file, 'app/layout.tsx');
+  assert.equal(notFound.category, 'launch');
+  assert.equal(notFound.severity, 'info');
+});
+
+test('missing-404-page is quiet with a Next.js not-found page', async () => {
+  assert.deepEqual(
+    notFound.check(await fixtureProject('missing-404-page', 'good')),
+    [],
+  );
+});
+
+test('missing-404-page flags a Next.js Pages Router without a 404 page', async () => {
+  const f = notFound.check(await fixtureProject('missing-404-page', 'bad-pages'));
+  assert.equal(f.length, 1);
+  assert.equal(f[0].file, 'src/pages/_app.tsx');
+});
+
+test('missing-404-page is quiet with a Next.js Pages Router 404 page', async () => {
+  assert.deepEqual(
+    notFound.check(await fixtureProject('missing-404-page', 'good-pages')),
+    [],
+  );
+});
+
+test('missing-404-page flags an Astro project without a 404 page', async () => {
+  const f = notFound.check(await fixtureProject('missing-404-page', 'bad-astro'));
+  assert.equal(f.length, 1);
+  assert.equal(f[0].file, 'astro.config.mjs');
+});
+
+test('missing-404-page is quiet with an Astro 404 page', async () => {
+  assert.deepEqual(
+    notFound.check(await fixtureProject('missing-404-page', 'good-astro')),
+    [],
+  );
+});
+
+test('missing-404-page flags a SvelteKit project without an error page', async () => {
+  const f = notFound.check(await fixtureProject('missing-404-page', 'bad-svelte'));
+  assert.equal(f.length, 1);
+  assert.equal(f[0].file, 'svelte.config.js');
+});
+
+test('missing-404-page is quiet with a SvelteKit error page', async () => {
+  assert.deepEqual(
+    notFound.check(await fixtureProject('missing-404-page', 'good-svelte')),
+    [],
+  );
+});
+
+test('missing-404-page stays quiet for non-web projects', () => {
+  const findings = notFound.check({
+    root: process.cwd(),
+    files: ['src/main.java', 'src/database/connection.java'],
+  });
+
+  assert.deepEqual(findings, []);
 });
 
 test('no-error-monitoring flags a JS app with no monitoring dependency', async () => {

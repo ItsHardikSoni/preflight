@@ -14,6 +14,7 @@ Every check lives in `src/rules/<id>.js`. Want one that isn't here? [Add it](../
 | `missing-meta-tags` | Launch basics | warning | An `index.html` or Next.js root layout without a title, description or share image |
 | `missing-favicon` | Launch basics | info | An `index.html` or Next.js root layout with no `favicon.ico`, `icon.png`, `app/icon.*` or `<link rel="icon">` |
 | `missing-robots-txt` | Launch basics | info | An `index.html`, Next.js root layout or `pages/_app` with no `robots.txt` (root or `public/`) and no `app/robots.*` route |
+| `missing-404-page` | Launch basics | info | A Next.js, Astro or SvelteKit project with no custom 404 page |
 
 ## Scoring
 
